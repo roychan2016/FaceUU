@@ -1,14 +1,30 @@
 package com.xuweichen.imagefilter.widget;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
+import android.opengl.GLES20;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import com.xuweichen.imagefilter.Filter.base.GPUImageFilter;
+import com.xuweichen.imagefilter.filter.base.GPUImageFilter;
+import com.xuweichen.imagefilter.helper.SavePictureTask;
 import com.xuweichen.imagefilter.manager.FaceCameraManager;
+import com.xuweichen.imagefilter.utils.FaceCameraInfo;
 import com.xuweichen.imagefilter.utils.OpenGLUtils;
+import com.xuweichen.imagefilter.utils.Rotation;
+import com.xuweichen.imagefilter.utils.TextureRotationUtil;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -80,6 +96,16 @@ public class CameraGLSurface extends BaseGLSurface {
     private void openCamera() {
         FaceCameraManager.Instance().openFrontCamera();
         FaceCameraManager.Instance().startPreview(surfaceTexture);
+
+        FaceCameraInfo info = FaceCameraManager.Instance().getCameraInfo();
+        if(info.orientation == 90 || info.orientation == 270){
+            imageWidth = info.previewHeight;
+            imageHeight = info.previewWidth;
+        }else{
+            imageWidth = info.previewWidth;
+            imageHeight = info.previewHeight;
+        }
+        GLES20.glViewport(0, 0, imageWidth, imageHeight);
     }
 
     @Override
@@ -87,5 +113,42 @@ public class CameraGLSurface extends BaseGLSurface {
         super.surfaceDestroyed(holder);
         FaceCameraManager.Instance().releaseCamera();
         if (null != baseFilter) baseFilter.destroy();
+    }
+
+    @Override
+    public void savePicture(final SavePictureTask savePictureTask) {
+        FaceCameraManager.Instance().takePicture(null, null, new Camera.PictureCallback() {
+
+            @Override
+            public void onPictureTaken(byte[] data, Camera camera) {
+                FaceCameraManager.Instance().stopPreview();
+                final Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                queueEvent(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Bitmap photo = drawPhoto(bitmap);
+                        GLES20.glViewport(0, 0, imageWidth, imageHeight);
+                        if (photo != null)
+                            savePictureTask.execute(photo);
+                    }
+                });
+                FaceCameraManager.Instance().startPreview();
+            }
+        } );
+    }
+
+    //上下左右翻转
+    private Bitmap drawPhoto(Bitmap bitmap){
+        Canvas canvas = new Canvas();
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(output);
+        Matrix matrix = new Matrix();
+        // 缩放 当sy为-1时向上翻转 当sx为-1时向左翻转 sx、sy都为-1时相当于旋转180°
+        matrix.postScale(1, -1);
+        // 因为向上翻转了所以y要向下平移一个bitmap的高度
+        matrix.postTranslate(0, bitmap.getHeight());
+        canvas.drawBitmap(bitmap, matrix, null);
+        return output;
     }
 }

@@ -4,8 +4,12 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 
+import com.xuweichen.imagefilter.helper.SavePictureTask;
 import com.xuweichen.imagefilter.utils.OpenGLUtils;
+import com.xuweichen.imagefilter.utils.Rotation;
+import com.xuweichen.imagefilter.utils.TextureRotationUtil;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -15,6 +19,16 @@ import javax.microedition.khronos.opengles.GL10;
  */
 
 public abstract class BaseGLSurface extends GLSurfaceView implements GLSurfaceView.Renderer {
+
+    /**
+     * GLSurfaceView的宽高
+     */
+    protected int surfaceWidth, surfaceHeight;
+    /**
+     * 图像宽高
+     */
+    protected int imageWidth, imageHeight;
+
     /**
      * SurfaceTexure纹理id
      */
@@ -48,4 +62,6 @@ public abstract class BaseGLSurface extends GLSurfaceView implements GLSurfaceVi
     public void onDrawFrame(GL10 gl10) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
     }
+
+    public abstract void savePicture(SavePictureTask savePictureTask);
 }

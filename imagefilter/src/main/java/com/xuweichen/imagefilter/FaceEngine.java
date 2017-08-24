@@ -1,7 +1,10 @@
 package com.xuweichen.imagefilter;
 
+import com.xuweichen.imagefilter.helper.SavePictureTask;
 import com.xuweichen.imagefilter.utils.FaceHolder;
 import com.xuweichen.imagefilter.widget.BaseGLSurface;
+
+import java.io.File;
 
 /**
  * Created by xuweichen on 2017/8/24.
@@ -28,5 +31,14 @@ public class FaceEngine {
             throw new NullPointerException("FaceEngine must be built first");
         else
             return faceEngine;
+    }
+
+    public  void savePhoto(File file) {
+        savePhoto(file, null);
+    }
+
+    public void savePhoto(File file, SavePictureTask.OnPictureSaveListener listener) {
+        SavePictureTask savePictureTask = new SavePictureTask(file, listener);
+        FaceHolder.glSurface.savePicture(savePictureTask);
     }
 }

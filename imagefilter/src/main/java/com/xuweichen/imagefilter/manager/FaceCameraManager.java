@@ -4,6 +4,7 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.view.SurfaceView;
 
+import com.xuweichen.imagefilter.utils.FaceCameraInfo;
 import com.xuweichen.imagefilter.utils.CameraUtils;
 
 import java.io.IOException;
@@ -103,6 +104,26 @@ public class FaceCameraManager {
         }
     }
 
+    public FaceCameraInfo getCameraInfo(){
+        FaceCameraInfo info = new FaceCameraInfo();
+        Camera.Size size = getPreviewSize();
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        Camera.getCameraInfo(this.isFront ? frontCameraId : backCameraId, cameraInfo);
+        info.previewWidth = size.width;
+        info.previewHeight = size.height;
+        info.orientation = cameraInfo.orientation;
+        info.isFront = this.isFront;
+        size = getPictureSize();
+        info.pictureWidth = size.width;
+        info.pictureHeight = size.height;
+        return info;
+    }
+
+    public void takePicture(Camera.ShutterCallback shutterCallback, Camera.PictureCallback rawCallback,
+                                   Camera.PictureCallback jpegCallback){
+        camera.takePicture(shutterCallback, rawCallback, jpegCallback);
+    }
+
     private void setDefaultParameters(){
         Camera.Parameters parameters = camera.getParameters();
         if (parameters.getSupportedFocusModes().contains(
@@ -115,6 +136,14 @@ public class FaceCameraManager {
         parameters.setPictureSize(pictureSize.width, pictureSize.height);
         parameters.setRotation(90);
         camera.setParameters(parameters);
+    }
+
+    private Camera.Size getPreviewSize(){
+        return camera.getParameters().getPreviewSize();
+    }
+
+    private Camera.Size getPictureSize(){
+        return camera.getParameters().getPictureSize();
     }
 
     private void facingCamera() {

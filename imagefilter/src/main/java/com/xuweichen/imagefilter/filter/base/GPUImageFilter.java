@@ -1,4 +1,4 @@
-package com.xuweichen.imagefilter.Filter.base;
+package com.xuweichen.imagefilter.filter.base;
 
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;

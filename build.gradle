@@ -1,0 +1,27 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+//        jcenterter()
+        maven { url project.MAVEN_URL }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+//        jcenter()
+        maven { url rootProject.MAVEN_URL }
+        maven { url rootProject.MAVEN_THIRD_URL }
+        maven { url rootProject.MAVEN_THIRD_SNAP_URL }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

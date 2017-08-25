@@ -9,6 +9,7 @@ import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.xuweichen.imagefilter.FaceEngine;
 import com.xuweichen.imagefilter.widget.CameraGLSurface;
@@ -18,13 +19,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static android.R.attr.mode;
-
 public class MainActivity extends AppCompatActivity {
     private FaceEngine faceEngine;
 
     private CameraGLSurface cameraGLSurface;
     private ImageView photoButton;
+    private ImageView beautifulButton;
+    private ImageView filterButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,13 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         cameraGLSurface = (CameraGLSurface) findViewById(R.id.camera_surface);
         faceEngine = FaceEngine.Builder.build(cameraGLSurface);
+
         photoButton = (ImageView) findViewById(R.id.photo_button);
         photoButton.setOnClickListener(buttonClickListener);
+        beautifulButton = (ImageView) findViewById(R.id.beautiful_button);
+        beautifulButton.setOnClickListener(buttonClickListener);
+        filterButton = (ImageView) findViewById(R.id.filter_button);
+        filterButton.setOnClickListener(buttonClickListener);
     }
 
     @Override
@@ -73,6 +79,12 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         takePhoto();
                     }
+                    break;
+                case R.id.beautiful_button:
+                    Toast.makeText(MainActivity.this, "开启美颜效果", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.filter_button:
+                    Toast.makeText(MainActivity.this, "打开滤镜面板", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;

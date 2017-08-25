@@ -69,12 +69,12 @@ public class GPUImageFilter {
         GLES20.glDeleteProgram(mGLProgramId);
     }
 
-    public int drawFrame(final int textureId) {
-        return drawFrame(textureId, mGLVertexBuffer, mGLTextureBuffer);
+    public int drawFrame(int textureId) {
+        return drawFrame(textureId, mGLVertexBuffer, mGLTextureBuffer, false);
     }
 
-    private int drawFrame(final int textureId, final FloatBuffer vertexBuffer,
-                           final FloatBuffer textureBuffer) {
+    public int drawFrame(int textureId, FloatBuffer vertexBuffer,
+                           final FloatBuffer textureBuffer, boolean isPhoto) {
         GLES20.glUseProgram(mGLProgramId);
 
         OpenGLUtils.checkGlError("use program");
@@ -91,7 +91,11 @@ public class GPUImageFilter {
 
         if (textureId != OpenGLUtils.NO_TEXTURE) {
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-            GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureId);
+            if(isPhoto)
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
+            else
+                GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureId);
+
             GLES20.glUniform1i(mGLUniformTexture, 0);
 
             OpenGLUtils.checkGlError("Bind Texture");

@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -28,6 +29,8 @@ import java.nio.IntBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
+import static android.R.attr.width;
 
 /**
  * Created by xuweichen on 2017/8/22.
@@ -80,8 +83,6 @@ public class CameraGLSurface extends BaseGLSurface {
         if(surfaceTexture == null)
             return;
         surfaceTexture.updateTexImage();
-        float[] mtx = new float[16];
-        surfaceTexture.getTransformMatrix(mtx);
         baseFilter.drawFrame(textureId);
     }
 
@@ -118,7 +119,6 @@ public class CameraGLSurface extends BaseGLSurface {
     @Override
     public void savePicture(final SavePictureTask savePictureTask) {
         FaceCameraManager.Instance().takePicture(null, null, new Camera.PictureCallback() {
-
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
                 FaceCameraManager.Instance().stopPreview();
@@ -134,8 +134,64 @@ public class CameraGLSurface extends BaseGLSurface {
                 });
                 FaceCameraManager.Instance().startPreview();
             }
-        } );
+        });
     }
+
+//    private Bitmap drawPhoto(Bitmap bitmap)
+//    {
+//        int width = bitmap.getWidth();
+//        int height = bitmap.getHeight();
+//        int[] mFrameBuffers = new int[1];
+//        int[] mFrameBufferTextures = new int[1];
+//
+//        GLES20.glGenFramebuffers(1, mFrameBuffers, 0);
+//        GLES20.glGenTextures(1, mFrameBufferTextures, 0);
+//        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mFrameBufferTextures[0]);
+//        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, width, height, 0,
+//                GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
+//        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+//                GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+//        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+//                GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+//        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+//                GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+//        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+//                GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+//        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[0]);
+//        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
+//                GLES20.GL_TEXTURE_2D, mFrameBufferTextures[0], 0);
+//
+//        GLES20.glViewport(0, 0, width, height);
+//        int textureId = OpenGLUtils.loadTexture(bitmap, OpenGLUtils.NO_TEXTURE, true);
+//
+//        FloatBuffer gLCubeBuffer = ByteBuffer.allocateDirect(TextureRotationUtil.CUBE.length * 4)
+//                .order(ByteOrder.nativeOrder())
+//                .asFloatBuffer();
+//        FloatBuffer gLTextureBuffer = ByteBuffer.allocateDirect(TextureRotationUtil.TEXTURE_NO_ROTATION.length * 4)
+//                .order(ByteOrder.nativeOrder())
+//                .asFloatBuffer();
+//        gLCubeBuffer.put(TextureRotationUtil.CUBE).position(0);
+//        gLTextureBuffer.put(TextureRotationUtil.getRotation(Rotation.ROTATION_270, false, true)).position(0);
+//
+//        baseFilter.drawFrame(textureId, gLCubeBuffer, gLTextureBuffer, true);
+//
+//        IntBuffer PixelBuffer = IntBuffer.allocate(width*height);
+//        PixelBuffer.position(0);
+//        GLES20.glReadPixels(0, 0, width, height, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, PixelBuffer);
+//
+//        PixelBuffer.position(0);//这里要把读写位置重置下
+//        int pix[] = new int[width*height];
+//        PixelBuffer.get(pix);//这是将intbuffer中的数据赋值到pix数组中
+//
+//        Bitmap result = Bitmap.createBitmap(pix, width, height,Bitmap.Config.ARGB_8888);//pix是上面读到的像素
+//
+//        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+//        GLES20.glDeleteTextures(1, new int[]{textureId}, 0);
+//        GLES20.glDeleteFramebuffers(mFrameBuffers.length, mFrameBuffers, 0);
+//        GLES20.glDeleteTextures(mFrameBufferTextures.length, mFrameBufferTextures, 0);
+//
+//        return result;
+//    }
 
     //上下左右翻转
     private Bitmap drawPhoto(Bitmap bitmap){

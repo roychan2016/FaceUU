@@ -3,7 +3,8 @@
 buildscript {
     repositories {
 //        jcenterter()
-        maven { url project.MAVEN_URL }
+        maven { url 'http://repo1.maven.org/maven2' }
+//        maven { url project.MAVEN_URL }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
@@ -16,9 +17,10 @@ buildscript {
 allprojects {
     repositories {
 //        jcenter()
-        maven { url rootProject.MAVEN_URL }
-        maven { url rootProject.MAVEN_THIRD_URL }
-        maven { url rootProject.MAVEN_THIRD_SNAP_URL }
+        maven { url 'http://repo1.maven.org/maven2' }
+//        maven { url rootProject.MAVEN_URL }
+//        maven { url rootProject.MAVEN_THIRD_URL }
+//        maven { url rootProject.MAVEN_THIRD_SNAP_URL }
     }
 }
 

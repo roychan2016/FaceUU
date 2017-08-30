@@ -1,7 +1,7 @@
 <resources>
     <dimen name="photo_button_size">80dp</dimen>
-    <dimen name="beautiful_size">50dp</dimen>
-    <dimen name="beautiful_padding">10dp</dimen>
+    <dimen name="beauty_size">50dp</dimen>
+    <dimen name="beauty_padding">10dp</dimen>
     <dimen name="photo_button_margin_bottom_high">15dp</dimen>
     <dimen name="photo_button_margin_bottom">10dp</dimen>
 </resources>

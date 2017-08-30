@@ -6,6 +6,8 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
 
+import com.xuweichen.imagefilter.helper.FaceHolder;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

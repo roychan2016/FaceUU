@@ -1,4 +1,4 @@
-package com.xuweichen.imagefilter.utils;
+package com.xuweichen.imagefilter.helper;
 
 import android.content.Context;
 
@@ -11,4 +11,6 @@ import com.xuweichen.imagefilter.widget.BaseGLSurface;
 public class FaceHolder {
     public static Context context;
     public static BaseGLSurface glSurface;
+
+    public static int beautyLevel = 0;
 }

@@ -1,8 +1,9 @@
 package com.xuweichen.imagefilter;
 
 import com.xuweichen.imagefilter.helper.SavePictureTask;
-import com.xuweichen.imagefilter.utils.FaceHolder;
+import com.xuweichen.imagefilter.helper.FaceHolder;
 import com.xuweichen.imagefilter.widget.BaseGLSurface;
+import com.xuweichen.imagefilter.widget.CameraGLSurface;
 
 import java.io.File;
 
@@ -40,5 +41,14 @@ public class FaceEngine {
     public void savePhoto(File file, SavePictureTask.OnPictureSaveListener listener) {
         SavePictureTask savePictureTask = new SavePictureTask(file, listener);
         FaceHolder.glSurface.savePicture(savePictureTask);
+    }
+
+    public void setBeautyLevel(int level) {
+        if (null != FaceHolder.glSurface
+                && FaceHolder.glSurface instanceof CameraGLSurface
+                && FaceHolder.beautyLevel != level) {
+            FaceHolder.beautyLevel = level;
+            ((CameraGLSurface) FaceHolder.glSurface).setBeautyLevel(level);
+        }
     }
 }

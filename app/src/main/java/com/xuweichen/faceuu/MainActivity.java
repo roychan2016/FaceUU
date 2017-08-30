@@ -2,15 +2,13 @@ package com.xuweichen.faceuu;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,23 +22,34 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.xuweichen.imagefilter.helper.FaceHolder.beautyLevel;
+
 public class MainActivity extends AppCompatActivity {
+    private final static String TAG = MainActivity.class.getSimpleName();
+
     private FaceEngine faceEngine;
 
     private CameraGLSurface cameraGLSurface;
 
     private ImageView photoButton;
 
-    private ImageView beautifulButton;
-    private ImageView filterButton;
+    private ImageView beautAndFilterButton;
+    private LinearLayout beautAndFilterPanel;
 
-    private LinearLayout beautifulPanel;
-    private TextView noBeautiful;
-    private TextView oneBeautiful;
-    private TextView twoBeautiful;
-    private TextView threeBeautiful;
-    private TextView fourBeautiful;
-    private TextView fiveBeautiful;
+    private TextView sizeTab;
+    private TextView beautyTab;
+    private TextView filterTab;
+
+    private LinearLayout sizePanel;
+    private TextView[] sizeLevel;
+
+    private LinearLayout beautyPanel;
+    private TextView[] beautyLevel;
+
+    private LinearLayout filterPanel;
+
+    private int selectColor;
+    private int defaultColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        defaultColor = Color.WHITE;
+        selectColor = Color.rgb(0, 255, 255);
+
         cameraGLSurface = (CameraGLSurface) findViewById(R.id.camera_surface);
         faceEngine = FaceEngine.Builder.build(cameraGLSurface);
         cameraGLSurface.setOnClickListener(onClickListener);
@@ -65,29 +77,43 @@ public class MainActivity extends AppCompatActivity {
         photoButton = (ImageView) findViewById(R.id.photo_button);
         photoButton.setOnClickListener(onClickListener);
 
-        beautifulButton = (ImageView) findViewById(R.id.beautiful_button);
-        beautifulButton.setOnClickListener(onClickListener);
-        filterButton = (ImageView) findViewById(R.id.filter_button);
-        filterButton.setOnClickListener(onClickListener);
+        beautAndFilterButton = (ImageView) findViewById(R.id.beauty_and_filter_button);
+        beautAndFilterButton.setOnClickListener(onClickListener);
+        beautAndFilterPanel = (LinearLayout) findViewById(R.id.beauty_and_filter);
+        beautAndFilterPanel.setOnClickListener(onClickListener);
 
-        beautifulPanel = (LinearLayout) findViewById(R.id.beautiful_layout);
-        oneBeautiful = (TextView) findViewById(R.id.one_beautiful);
-        twoBeautiful = (TextView) findViewById(R.id.two_beautiful);
-        threeBeautiful = (TextView) findViewById(R.id.three_beautiful);
-        fourBeautiful = (TextView) findViewById(R.id.four_beautiful);
-        fiveBeautiful = (TextView) findViewById(R.id.five_beautiful);
-    }
+        sizeTab = (TextView) findViewById(R.id.size_tab);
+        sizeTab.setOnClickListener(onClickListener);
+        beautyTab = (TextView) findViewById(R.id.beauty_tab);
+        beautyTab.setOnClickListener(onClickListener);
+        filterTab = (TextView) findViewById(R.id.filter_tab);
+        filterTab.setOnClickListener(onClickListener);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //if (null != cameraGLSurface) cameraGLSurface.onResume();
-    }
+        sizePanel = (LinearLayout) findViewById(R.id.size_layout);
+        sizeLevel = new TextView[6];
+        sizeLevel[0] = (TextView) findViewById(R.id.no_size);
+        sizeLevel[1] = (TextView) findViewById(R.id.one_size);
+        sizeLevel[2] = (TextView) findViewById(R.id.two_size);
+        sizeLevel[3] = (TextView) findViewById(R.id.three_size);
+        sizeLevel[4] = (TextView) findViewById(R.id.four_size);
+        sizeLevel[5] = (TextView) findViewById(R.id.five_size);
+        for (TextView sizeItem : sizeLevel) {
+            sizeItem.setOnClickListener(onClickListener);
+        }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //if (null != cameraGLSurface) cameraGLSurface.onPause();
+        beautyPanel = (LinearLayout) findViewById(R.id.beauty_layout);
+        beautyLevel = new TextView[6];
+        beautyLevel[0] = (TextView) findViewById(R.id.no_beauty);
+        beautyLevel[1] = (TextView) findViewById(R.id.one_beauty);
+        beautyLevel[2] = (TextView) findViewById(R.id.two_beauty);
+        beautyLevel[3] = (TextView) findViewById(R.id.three_beauty);
+        beautyLevel[4] = (TextView) findViewById(R.id.four_beauty);
+        beautyLevel[5] = (TextView) findViewById(R.id.five_beauty);
+        for (TextView beautyItem : beautyLevel) {
+            beautyItem.setOnClickListener(onClickListener);
+        }
+
+        filterPanel =  (LinearLayout) findViewById(R.id.filter_layout);
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -105,13 +131,55 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.camera_surface:
-                    showBeautifulPanel(false);
+                    showBeautAndFilterPanel(false);
                     break;
-                case R.id.beautiful_button:
-                    showBeautifulPanel(true);
+                case R.id.beauty_and_filter_button:
+                    showBeautAndFilterPanel(true);
                     break;
-                case R.id.filter_button:
-                    Toast.makeText(MainActivity.this, "打开滤镜面板", Toast.LENGTH_SHORT).show();
+                case R.id.size_tab:
+                    showBeautyOrFilter(0);
+                    break;
+                case R.id.filter_tab:
+                    showBeautyOrFilter(1);
+                    break;
+                case R.id.beauty_tab:
+                    showBeautyOrFilter(2);
+                    break;
+                case R.id.no_size:
+                    setSizeLevel(0);
+                    break;
+                case R.id.one_size:
+                    setSizeLevel(1);
+                    break;
+                case R.id.two_size:
+                    setSizeLevel(2);
+                    break;
+                case R.id.three_size:
+                    setSizeLevel(3);
+                    break;
+                case R.id.four_size:
+                    setSizeLevel(4);
+                    break;
+                case R.id.five_size:
+                    setSizeLevel(5);
+                    break;
+                case R.id.no_beauty:
+                    setBeautyLevel(0);
+                    break;
+                case R.id.one_beauty:
+                    setBeautyLevel(1);
+                    break;
+                case R.id.two_beauty:
+                    setBeautyLevel(2);
+                    break;
+                case R.id.three_beauty:
+                    setBeautyLevel(3);
+                    break;
+                case R.id.four_beauty:
+                    setBeautyLevel(4);
+                    break;
+                case R.id.five_beauty:
+                    setBeautyLevel(5);
                     break;
                 default:
                     break;
@@ -145,27 +213,70 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showBeautifulPanel(boolean show) {
-        beautifulButton.setVisibility(show ? View.GONE : View.VISIBLE);
-        filterButton.setVisibility(show ? View.GONE : View.VISIBLE);
+    private void showBeautAndFilterPanel(boolean show) {
+        beautAndFilterButton.setVisibility(show ? View.GONE : View.VISIBLE);
+        beautAndFilterPanel.setVisibility(show ? View.VISIBLE : View.GONE);
+        photoButton.setScaleX(show ? 0.75f : 1.0f);
+        photoButton.setScaleY(show ? 0.75f : 1.0f);
 
-        ScaleAnimation photoBtnAnim = new ScaleAnimation(
-                show ? 1.0f : 0.75f, show ? 0.75f : 1.0f,
-                show ? 1.0f : 0.75f, show ? 0.75f : 1.0f,
-                Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f
-        );
-        photoBtnAnim.setDuration(500);
-        photoBtnAnim.setFillAfter(true);
-        photoButton.startAnimation(photoBtnAnim);
+//        //动画，但是有问题，显示不全，疑似超出按钮的范围无法显示
+//        beautAndFilterPanel.animate()
+//                .translationY(show ? 0 : beautAndFilterPanel.getHeight())
+//                .setDuration(200)
+//                .start();
+//        photoButton.animate()
+//                .scaleX(show ? 0.75f : 1.0f)
+//                .scaleY(show ? 0.75f : 1.0f)
+//                .setDuration(500)
+//                .start();
+//        ScaleAnimation photoBtnAnim = new ScaleAnimation(
+//                show ? 1.0f : 0.75f, show ? 0.75f : 1.0f,
+//                show ? 1.0f : 0.75f, show ? 0.75f : 1.0f,
+//                Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f
+//        );
+//        photoBtnAnim.setDuration(500);
+//        photoBtnAnim.setFillAfter(true);
+//        photoButton.startAnimation(photoBtnAnim);
+//
+//        TranslateAnimation BeautyPanelAnim = new TranslateAnimation(
+//                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+//                0.0f, Animation.RELATIVE_TO_SELF, show ? 1.0f : 0.0f,
+//                Animation.RELATIVE_TO_SELF, show ? 0.0f : 1.0f);
+//        BeautyPanelAnim.setDuration(200);
+//        BeautyPanelAnim.setFillAfter(true);
+//        beautAndFilterPanel.setVisibility(View.VISIBLE);
+//        beautAndFilterPanel.startAnimation(BeautyPanelAnim);
+    }
 
-        TranslateAnimation beautifulPanelAnim = new TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                0.0f, Animation.RELATIVE_TO_SELF, show ? 1.0f : 0.0f,
-                Animation.RELATIVE_TO_SELF, show ? 0.0f : 1.0f);
-        beautifulPanelAnim.setDuration(500);
-        beautifulPanelAnim.setFillAfter(true);
+    private void showBeautyOrFilter(int tabIndex) {
+        sizeTab.setTextColor(tabIndex == 0 ? selectColor : defaultColor);
+        filterTab.setTextColor(tabIndex == 1 ? selectColor : defaultColor);
+        beautyTab.setTextColor(tabIndex == 2 ? selectColor : defaultColor);
 
-        beautifulPanel.setVisibility(View.VISIBLE);
-        beautifulPanel.startAnimation(beautifulPanelAnim);
+        sizePanel.setVisibility(tabIndex == 0 ? View.VISIBLE : View.GONE);
+        filterPanel.setVisibility(tabIndex == 1 ? View.VISIBLE : View.GONE);
+        beautyPanel.setVisibility(tabIndex == 2 ? View.VISIBLE : View.GONE);
+    }
+
+    private void setSizeLevel(int level) {
+        for (int i=0; i<sizeLevel.length; i++) {
+            boolean isLevel = i == level;
+            if (i!=0) sizeLevel[i].setText(isLevel ? "V" : Integer.toString(i));
+            sizeLevel[i].setTextColor(isLevel ? selectColor : defaultColor);
+            sizeLevel[i].setBackgroundResource(isLevel ? R.drawable.blue_black_circle : R.drawable.white_black_circle);
+        }
+
+        Toast.makeText(this, "开启美形 级别："+level, Toast.LENGTH_SHORT).show();
+    }
+
+    private void setBeautyLevel(int level) {
+        for (int i=0; i<beautyLevel.length; i++) {
+            boolean isLevel = i == level;
+            beautyLevel[i].setTextColor(isLevel ? selectColor : defaultColor);
+            beautyLevel[i].setBackgroundResource(isLevel ? R.drawable.blue_black_circle : R.drawable.white_black_circle);
+        }
+        //这是美颜效果为Level级别
+        if (null != faceEngine) faceEngine.setBeautyLevel(level);
+        Toast.makeText(this, "开启美颜 级别："+level, Toast.LENGTH_SHORT).show();
     }
 }

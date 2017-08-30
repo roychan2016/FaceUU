@@ -107,7 +107,21 @@ public class CameraGLSurface extends BaseGLSurface {
             imageHeight = info.previewHeight;
         }
         GLES20.glViewport(0, 0, imageWidth, imageHeight);
+        if (null != baseFilter) baseFilter.setTexelSize(imageWidth, imageHeight);
     }
+
+    /******************************************************
+     ************************* 美颜 ***********************
+     ******************************************************/
+
+    public void setBeautyLevel(int level) {
+        if (null != baseFilter) baseFilter.setBeautyLevel(level);
+    }
+
+
+    /******************************************************
+    ************************* 拍照 ************************
+    ******************************************************/
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
@@ -207,4 +221,6 @@ public class CameraGLSurface extends BaseGLSurface {
         canvas.drawBitmap(bitmap, matrix, null);
         return output;
     }
+
+
 }

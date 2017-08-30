@@ -2,9 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.xuweichen.faceuu.MainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.xuweichen.faceuu.MainActivity">
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <com.xuweichen.imagefilter.widget.CameraGLSurface
         android:id="@+id/camera_surface"
@@ -12,106 +14,223 @@
         android:layout_height="match_parent" />
 
     <LinearLayout
-        android:id="@+id/beautiful_layout"
+        android:id="@+id/beauty_and_filter"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="160dp"
         android:layout_alignParentBottom="true"
         android:background="#66000000"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/no_beautiful"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/blue_black_circle"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:textColor="#FF00FFFF"
-            android:textSize="20sp"
-            android:text="✕"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/one_beautiful"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/white_black_circle"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="10dp"
-            android:textColor="#FFFFFFFF"
-            android:textSize="20sp"
-            android:text="1"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/two_beautiful"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/white_black_circle"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="10dp"
-            android:textColor="#FFFFFFFF"
-            android:textSize="20sp"
-            android:text="2"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/three_beautiful"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/white_black_circle"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="10dp"
-            android:textColor="#FFFFFFFF"
-            android:textSize="20sp"
-            android:text="3"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/four_beautiful"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/white_black_circle"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="10dp"
-            android:textColor="#FFFFFFFF"
-            android:textSize="20sp"
-            android:text="4"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/five_beautiful"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/white_black_circle"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="10dp"
-            android:textColor="#FFFFFFFF"
-            android:textSize="20sp"
-            android:text="5"
-            android:gravity="center"/>
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:weightSum="3"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/size_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="美型"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/filter_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="滤镜"
+                android:textColor="#FF00FFFF"
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/beauty_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="美颜"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/size_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/no_size"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/blue_black_circle"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FF00FFFF"
+                android:textSize="20sp"
+                android:text="✕"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/one_size"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/white_black_circle"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"
+                android:text="1"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/two_size"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/white_black_circle"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"
+                android:text="2"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/three_size"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/white_black_circle"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"
+                android:text="3"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/four_size"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/white_black_circle"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"
+                android:text="4"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/five_size"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/white_black_circle"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"
+                android:text="5"
+                android:gravity="center"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/filter_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:textColor="#FF00FFFF"
+                android:textSize="20sp"
+                android:text="滤镜功能敬请期待"
+                android:gravity="center_horizontal"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/beauty_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/no_beauty"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/blue_black_circle"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FF00FFFF"
+                android:textSize="20sp"
+                android:text="✕"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/one_beauty"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/white_black_circle"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"
+                android:text="1"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/two_beauty"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/white_black_circle"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"
+                android:text="2"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/three_beauty"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/white_black_circle"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"
+                android:text="3"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/four_beauty"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/white_black_circle"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"
+                android:text="4"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/five_beauty"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/white_black_circle"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"
+                android:text="5"
+                android:gravity="center"/>
+        </LinearLayout>
     </LinearLayout>
 
     <ImageView
         android:id="@+id/photo_button"
         android:layout_width="@dimen/photo_button_size"
         android:layout_height="@dimen/photo_button_size"
+        android:transformPivotX="40dp"
+        android:transformPivotY="80dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/photo_button_margin_bottom"
         android:src="@drawable/photo_button"/>
 
     <ImageView
-        android:id="@+id/beautiful_button"
-        android:layout_width="@dimen/beautiful_size"
-        android:layout_height="@dimen/beautiful_size"
-        android:padding="@dimen/beautiful_padding"
-        android:layout_above="@id/photo_button"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="130dp"
-        android:src="@drawable/beautiful"/>
-
-    <ImageView
-        android:id="@+id/filter_button"
-        android:layout_width="@dimen/beautiful_size"
-        android:layout_height="@dimen/beautiful_size"
+        android:id="@+id/beauty_and_filter_button"
+        android:layout_width="@dimen/beauty_size"
+        android:layout_height="@dimen/beauty_size"
         android:padding="9dp"
-        android:layout_above="@id/photo_button"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="130dp"
+        android:layout_marginEnd="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="25dp"
         android:src="@drawable/filter"/>
 </RelativeLayout>

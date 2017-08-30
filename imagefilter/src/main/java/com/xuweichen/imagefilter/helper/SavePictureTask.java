@@ -5,8 +5,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import com.xuweichen.imagefilter.utils.FaceHolder;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

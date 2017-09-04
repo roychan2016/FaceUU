@@ -17,6 +17,7 @@
         android:id="@+id/beauty_and_filter"
         android:layout_width="match_parent"
         android:layout_height="160dp"
+        android:translationY="160dp"
         android:layout_alignParentBottom="true"
         android:background="#66000000"
         android:orientation="vertical">
@@ -211,6 +212,10 @@
                 android:gravity="center"/>
         </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="1px"
+        android:layout_height="1px"/>
 
     <ImageView
         android:id="@+id/photo_button"

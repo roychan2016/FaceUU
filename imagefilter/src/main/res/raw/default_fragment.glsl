@@ -5,64 +5,11 @@ varying mediump vec2 textureCoordinate;
 
 uniform samplerExternalOES inputImageTexture;
 
-//大眼
-uniform highp float scaleRatio;// 缩放系数，0无缩放，大于0则放大
-uniform highp float radius;// 缩放算法的作用域半径
-uniform highp vec2 leftEyeCenterPosition; // 左眼控制点，越远变形越小
-uniform highp vec2 rightEyeCenterPosition; // 右眼控制点
-uniform float aspectRatio; // 所处理图像的宽高比
-
-//瘦脸
-uniform float leftContourPoints[20];
-uniform float rightContourPoints[20];
-uniform float deltaArray[10];
-uniform int arraySize;
-
 //美颜
 uniform vec2 singleStepOffset;
 uniform float params;
 const highp vec3 W = vec3(0.299,0.587,0.114);
 vec2 blurCoordinates[20];
-
-highp vec2 warpEysPositionToUse(vec2 centerPostion, vec2 currentPosition, float radius, float scaleRatio, float aspectRatio)
-{
-    vec2 positionToUse = currentPosition;
-
-    vec2 currentPositionToUse = vec2(currentPosition.x, currentPosition.y * aspectRatio + 0.5 - 0.5 * aspectRatio);
-    vec2 centerPostionToUse = vec2(centerPostion.x, centerPostion.y * aspectRatio + 0.5 - 0.5 * aspectRatio);
-
-    float r = distance(currentPositionToUse, centerPostionToUse);
-
-    if(r < radius)
-    {
-        float alpha = 1.0 - scaleRatio * pow(r / radius - 1.0, 2.0);
-        positionToUse = centerPostion + alpha * (currentPosition - centerPostion);
-    }
-
-    return positionToUse;
-}
-
-highp vec2 warpFacePositionToUse(vec2 currentPoint, vec2 contourPointA,  vec2 contourPointB, float radius, float delta, float aspectRatio)
- {
-     vec2 positionToUse = currentPoint;
-
-     vec2 currentPointToUse = vec2(currentPoint.x, currentPoint.y * aspectRatio + 0.5 - 0.5 * aspectRatio);
-     vec2 contourPointAToUse = vec2(contourPointA.x, contourPointA.y * aspectRatio + 0.5 - 0.5 * aspectRatio);
-
-     float r = distance(currentPointToUse, contourPointAToUse);
-     if(r < radius)
-     {
-         vec2 dir = normalize(contourPointB - contourPointA);
-         float dist = radius * radius - r * r;
-         float alpha = dist / (dist + (r-delta) * (r-delta));
-         alpha = alpha * alpha;
-
-         positionToUse = positionToUse - alpha * delta * dir;
-
-     }
-
-     return positionToUse;
- }
 
 float hardLight(float color)
 {
@@ -76,27 +23,9 @@ float hardLight(float color)
 void main()
 {
     vec2 positionToUse = textureCoordinate;
-
-    if(scaleRatio > 0.0)  //大眼
-    {
-        positionToUse = warpEysPositionToUse(leftEyeCenterPosition, textureCoordinate, radius, scaleRatio, aspectRatio);
-        positionToUse = warpEysPositionToUse(rightEyeCenterPosition, positionToUse, radius, scaleRatio, aspectRatio);
-        gl_FragColor = texture2D(inputImageTexture, positionToUse);
-        if(arraySize <= 0 && params <= 0.0) return;
-    }
-
-    for(int i = 0; i < arraySize; i++) //瘦脸
-    {
-        positionToUse = warpFacePositionToUse(positionToUse, vec2(leftContourPoints[i * 2], leftContourPoints[i * 2 + 1]), vec2(rightContourPoints[i * 2], rightContourPoints[i * 2 + 1]), radius, deltaArray[i], aspectRatio);
-        positionToUse = warpFacePositionToUse(positionToUse, vec2(rightContourPoints[i * 2], rightContourPoints[i * 2 + 1]), vec2(leftContourPoints[i * 2], leftContourPoints[i * 2 + 1]), radius, deltaArray[i], aspectRatio);
-        gl_FragColor = texture2D(inputImageTexture, positionToUse);
-        if(params <= 0.0) return;
-    }
-
     if(params > 0.0) //美颜
     {
         vec3 centralColor = texture2D(inputImageTexture, positionToUse).rgb;
-
         blurCoordinates[0] = textureCoordinate.xy + singleStepOffset * vec2(0.0, -10.0);
         blurCoordinates[1] = textureCoordinate.xy + singleStepOffset * vec2(0.0, 10.0);
         blurCoordinates[2] = textureCoordinate.xy + singleStepOffset * vec2(-10.0, 0.0);

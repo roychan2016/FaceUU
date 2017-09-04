@@ -215,37 +215,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void showBeautAndFilterPanel(boolean show) {
         beautAndFilterButton.setVisibility(show ? View.GONE : View.VISIBLE);
-        beautAndFilterPanel.setVisibility(show ? View.VISIBLE : View.GONE);
-        photoButton.setScaleX(show ? 0.75f : 1.0f);
-        photoButton.setScaleY(show ? 0.75f : 1.0f);
+//        beautAndFilterPanel.setVisibility(show ? View.VISIBLE : View.GONE);
+//        photoButton.setScaleX(show ? 0.75f : 1.0f);
+//        photoButton.setScaleY(show ? 0.75f : 1.0f);
 
-//        //动画，但是有问题，显示不全，疑似超出按钮的范围无法显示
-//        beautAndFilterPanel.animate()
-//                .translationY(show ? 0 : beautAndFilterPanel.getHeight())
-//                .setDuration(200)
-//                .start();
-//        photoButton.animate()
-//                .scaleX(show ? 0.75f : 1.0f)
-//                .scaleY(show ? 0.75f : 1.0f)
-//                .setDuration(500)
-//                .start();
-//        ScaleAnimation photoBtnAnim = new ScaleAnimation(
-//                show ? 1.0f : 0.75f, show ? 0.75f : 1.0f,
-//                show ? 1.0f : 0.75f, show ? 0.75f : 1.0f,
-//                Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f
-//        );
-//        photoBtnAnim.setDuration(500);
-//        photoBtnAnim.setFillAfter(true);
-//        photoButton.startAnimation(photoBtnAnim);
-//
-//        TranslateAnimation BeautyPanelAnim = new TranslateAnimation(
-//                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-//                0.0f, Animation.RELATIVE_TO_SELF, show ? 1.0f : 0.0f,
-//                Animation.RELATIVE_TO_SELF, show ? 0.0f : 1.0f);
-//        BeautyPanelAnim.setDuration(200);
-//        BeautyPanelAnim.setFillAfter(true);
-//        beautAndFilterPanel.setVisibility(View.VISIBLE);
-//        beautAndFilterPanel.startAnimation(BeautyPanelAnim);
+        //动画，但是有问题，显示不全，疑似超出按钮的范围无法显示
+        beautAndFilterPanel.animate()
+                .translationY(show ? 0 : beautAndFilterPanel.getHeight())
+                .setDuration(200)
+                .start();
+        photoButton.animate()
+                .scaleX(show ? 0.75f : 1.0f)
+                .scaleY(show ? 0.75f : 1.0f)
+                .setDuration(500)
+                .start();
     }
 
     private void showBeautyOrFilter(int tabIndex) {
